@@ -8,23 +8,34 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
-@Table
+@Table(name = "employees")
 public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String firstName;
+
     private String lastName;
+
     private Integer phoneNumber;
+
     private String email;
+
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -32,5 +43,12 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     private SkillLevel skillLevel;
+
+
+    @ManyToMany
+    @JoinTable(name = "employees_projects",joinColumns =
+    @JoinColumn(name = "employee_id", referencedColumnName = "id"), inverseJoinColumns =
+    @JoinColumn(name = "project_id",referencedColumnName = "id"))
+    private List<Project> projects = new ArrayList<>();
 
 }
