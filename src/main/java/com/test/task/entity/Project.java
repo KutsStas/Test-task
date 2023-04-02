@@ -5,29 +5,31 @@ import com.test.task.entity.enums.ProjectStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "projects")
+@Table(name = "projects", uniqueConstraints = {
+        @UniqueConstraint(name = "ui_project_name", columnNames = "projectName")
+})
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer projectName;
+    private String projectName;
 
 
     @Enumerated(EnumType.STRING)
@@ -36,7 +38,7 @@ public class Project {
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "projects")
-    private List<Employee> employees = new ArrayList<>();
+    @ManyToMany(mappedBy = "projects")
+    private Set<Employee> employees = new HashSet<>();
 
 }

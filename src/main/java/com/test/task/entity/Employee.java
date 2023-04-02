@@ -15,8 +15,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -46,9 +46,9 @@ public class Employee {
 
 
     @ManyToMany
-    @JoinTable(name = "employees_projects",joinColumns =
-    @JoinColumn(name = "employee_id", referencedColumnName = "id"), inverseJoinColumns =
-    @JoinColumn(name = "project_id",referencedColumnName = "id"))
-    private List<Project> projects = new ArrayList<>();
+    @JoinTable(name = "employees_projects", joinColumns =
+    @JoinColumn(name = "employee_id"), inverseJoinColumns =
+    @JoinColumn(name = "project_id"))
+    private Set<Project> projects = new HashSet<>();
 
 }

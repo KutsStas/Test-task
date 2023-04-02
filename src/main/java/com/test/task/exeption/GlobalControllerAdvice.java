@@ -26,6 +26,14 @@ public class GlobalControllerAdvice {
                 new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(IncorrectInputException.class)
+    public final ResponseEntity<ErrorDetails> handleValidationException(
+            IncorrectInputException ex, WebRequest request) {
+
+        ErrorDetails errorDetails =
+                new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(NoSuchElementException.class)
     public final ResponseEntity<ErrorDetails> handleNotFoundExceptions(Exception ex, WebRequest request) {

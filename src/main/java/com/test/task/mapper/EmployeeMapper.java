@@ -5,6 +5,8 @@ import com.test.task.entity.Employee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Set;
+
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
 
@@ -15,6 +17,6 @@ public interface EmployeeMapper {
 
     Employee toEmployee (EmployeeDto dto);
 
-
+    Set<EmployeeDto> toDtoCollect (Set<Employee> employees);
 
 }

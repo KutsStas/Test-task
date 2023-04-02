@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Set;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 @Slf4j
 public class EmployeeController {
 
@@ -54,7 +56,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Boolean> EmployeeUser(@RequestParam Integer id) {
+    public ResponseEntity<Boolean> deleteEmployee(@RequestParam Integer id) {
 
         log.info("Delete employee by id:{} request", id);
         service.deleteEmployeeById(id);
@@ -62,5 +64,57 @@ public class EmployeeController {
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<Set<EmployeeDto>> getAllEmployees() {
+
+        log.info("Get all employees request");
+        Set<EmployeeDto> userDtoList = service.getAllEmployees();
+        log.info("Successfully get all employees");
+
+        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/department")
+    public ResponseEntity<Set<EmployeeDto>> getAllEmployeesByDepartment(@RequestParam String department) {
+
+        log.info("Get all employees by department request");
+        Set<EmployeeDto> userDtoList = service.getAllEmployeesByDepartment(department);
+        log.info("Successfully get all employees by department");
+
+        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/project")
+    public ResponseEntity<Set<EmployeeDto>> getAllEmployeesByProjectName(@RequestParam String projectName) {
+
+        log.info("Get all employees request by project");
+        Set<EmployeeDto> userDtoList = service.getAllEmployeesByProjectName(projectName);
+        log.info("Successfully get all employees by project");
+
+        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+    }
+
+
+    @PutMapping("/hire")
+    public ResponseEntity<Boolean> addEmployeeToTheProject(@RequestParam Integer employeeId, String projectName) {
+
+        log.info("Add employee to project with name:{}  request ", projectName);
+        service.setProjectToEmployee(employeeId, projectName);
+        log.info("Employee with id:{} added successfully", employeeId);
+
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+    }
+
+    @PutMapping("/remove")
+    public ResponseEntity<Boolean> removeEmployeeToTheProject(@RequestParam Integer id, Integer projectId) {
+
+        log.info("Remove employee to project with Id:{}  request ", projectId);
+        service.removeEmployeeToTheProjectById(id, projectId);
+        log.info("Employee with id:{} removed successfully", id);
+
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+    }
+
 
 }
