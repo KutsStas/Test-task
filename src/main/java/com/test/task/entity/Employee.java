@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -21,7 +22,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "employees")
+@Table(name = "employees", indexes =
+@Index(name = "dep_index", columnList = "department"))
 public class Employee {
 
     @Id
@@ -36,7 +38,6 @@ public class Employee {
 
     private String email;
 
-    private String password;
 
     @Enumerated(EnumType.STRING)
     private Department department;
@@ -46,9 +47,8 @@ public class Employee {
 
 
     @ManyToMany
-    @JoinTable(name = "employees_projects", joinColumns =
-    @JoinColumn(name = "employee_id"), inverseJoinColumns =
-    @JoinColumn(name = "project_id"))
+    @JoinTable(name = "employees_projects", joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     private Set<Project> projects = new HashSet<>();
 
 }

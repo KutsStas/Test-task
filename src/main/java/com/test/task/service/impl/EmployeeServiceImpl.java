@@ -5,7 +5,6 @@ import com.test.task.entity.Employee;
 import com.test.task.entity.Project;
 import com.test.task.entity.enums.Department;
 import com.test.task.exeption.IncorrectInputException;
-import com.test.task.exeption.ValidationException;
 import com.test.task.mapper.EmployeeMapper;
 import com.test.task.repository.EmployeeRepository;
 import com.test.task.repository.ProjectRepository;
@@ -13,7 +12,6 @@ import com.test.task.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -22,7 +20,7 @@ import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
-class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository repository;
 
@@ -60,13 +58,12 @@ class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto updateEmployeeInfo(EmployeeDto dto) {
 
-
         if (isNull(dto.getId())) {
-            throw new IncorrectInputException("Employee id can't be null");
+            throw new IncorrectInputException("Employees id can't be null");
         }
-        repository.findById(dto.getId()).orElseThrow(() ->
-                new NoSuchElementException("Employee with id: " + dto.getId() + " not found"));
-
+        if (!repository.existsById(dto.getId())) {
+            throw new NoSuchElementException("Employee with id: " + dto.getId() + " not found");
+        }
         Employee employeeUPD = mapper.toEmployee(dto);
         repository.save(employeeUPD);
 
@@ -80,20 +77,14 @@ class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Set<EmployeeDto> getAllEmployeesByDepartment(String department) {
+    public Set<EmployeeDto> getAllEmployeesByDepartment(Department department) {
 
-        if (!(Arrays.asList(Department.values()).toString().contains(department.toUpperCase())))
-            throw new IncorrectInputException
-                    ("Incorrect input, department must be in the form: MANAGER, DEVELOPER, QA, DEVOPS, SYS_ADMIN");  // todo simple
-
-        Set<Employee> employees = repository.findAllByDepartment(department.toUpperCase());
-
-        if (employees.isEmpty())
-            throw new NoSuchElementException("Employee with department: " + department + " not found");
+        Set<Employee> employees = repository.findAllByDepartment(department);
 
         return mapper.toDtoCollect(employees);
     }
 
+    @Override
     public void setProjectToEmployee(Integer id, String projectName) {
 
         Employee employee = repository.findById(id).orElseThrow(() ->
@@ -104,12 +95,13 @@ class EmployeeServiceImpl implements EmployeeService {
         repository.save(employee);
     }
 
-    public void removeEmployeeToTheProjectById(Integer id, Integer projectID) {
+    @Override
+    public void removeEmployeeFromTheProjectById(Integer employeeId, Integer projectId) {
 
-        Employee employee = repository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("Employee with id: " + id + " not found"));
-        Project project = projectRepository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("Project with projectID:" + projectID + " not found"));
+        Employee employee = repository.findById(employeeId).orElseThrow(() ->
+                new NoSuchElementException("Employee with id: " + employeeId + " not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() ->
+                new NoSuchElementException("Project with projectID:" + projectId + " not found"));
         employee.getProjects().remove(project);
         repository.save(employee);
     }
@@ -119,8 +111,6 @@ class EmployeeServiceImpl implements EmployeeService {
     public Set<EmployeeDto> getAllEmployeesByProjectName(String projectName) {
 
         Set<Employee> employees = repository.findAllByProjectName(projectName);
-        if (employees.isEmpty())
-            throw new NoSuchElementException("Employee with this project name: " + projectName + " not found");
         return mapper.toDtoCollect(employees);
     }
 

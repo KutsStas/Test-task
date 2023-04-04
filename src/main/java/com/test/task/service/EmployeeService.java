@@ -1,6 +1,7 @@
 package com.test.task.service;
 
 import com.test.task.dto.EmployeeDto;
+import com.test.task.entity.enums.Department;
 
 import java.util.Set;
 
@@ -16,12 +17,12 @@ public interface EmployeeService {
 
     void deleteEmployeeById(Integer id);
 
-    Set<EmployeeDto> getAllEmployeesByDepartment(String department);
+    Set<EmployeeDto> getAllEmployeesByDepartment(Department department);
 
     void setProjectToEmployee(Integer id, String projectName);
 
     Set<EmployeeDto> getAllEmployeesByProjectName(String projectName);
 
-    public void removeEmployeeToTheProjectById(Integer id, Integer projectID);
+    void removeEmployeeFromTheProjectById(Integer id, Integer projectID);
 
 }

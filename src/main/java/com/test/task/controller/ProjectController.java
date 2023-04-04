@@ -1,6 +1,7 @@
 package com.test.task.controller;
 
 import com.test.task.dto.ProjectDto;
+import com.test.task.entity.enums.ProjectStatus;
 import com.test.task.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +63,7 @@ public class ProjectController {
         service.deleteProjectById(id);
         log.info("Delete project by id:{} successfully", id);
 
-        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK); // todo always return true
     }
 
     @GetMapping("/all")
@@ -76,7 +77,7 @@ public class ProjectController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<Set<ProjectDto>> getAllProjectsByStatus(@RequestParam String status) {
+    public ResponseEntity<Set<ProjectDto>> getAllProjectsByStatus(@RequestParam ProjectStatus status) {
 
         log.info("Get projects request");
         Set<ProjectDto> projectDtoList = service.getAllProjectsByStatus(status);

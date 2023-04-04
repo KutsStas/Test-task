@@ -9,10 +9,10 @@ import java.util.Set;
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
 
-
     ProjectDto toDto(Project project);
 
     Project toProject(ProjectDto dto);
 
-   Set<ProjectDto> toDtoCollect(Set<Project> projects);
+    Set<ProjectDto> toDtoCollect(Set<Project> projects);
+
 }

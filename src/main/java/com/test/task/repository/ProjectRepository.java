@@ -1,6 +1,7 @@
 package com.test.task.repository;
 
 import com.test.task.entity.Project;
+import com.test.task.entity.enums.ProjectStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,12 +10,11 @@ import java.util.Set;
 
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
-    @Query(value = "select * from projects order by case project_priority " +
-            "when 'LOW' then 3 when 'MEDIUM' then 2 when 'HIGH' then 1 END", nativeQuery = true)
+    @Query("select p from Project p order by p.projectPriority")
     Set<Project> findAllProjectsOrderingByPriority();
 
-    @Query(value = "select * from projects where project_status =:status", nativeQuery = true)
-    Set<Project> findAllProjectsByStatus(String status);
+    @Query("select p from Project p where p.projectStatus = ?1")
+    Set<Project> findByProjectStatus(ProjectStatus projectStatus);
 
     Optional<Project> findByProjectName(String projectName);
 

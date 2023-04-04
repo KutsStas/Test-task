@@ -1,8 +1,8 @@
 package com.test.task.service;
 
 import com.test.task.dto.ProjectDto;
+import com.test.task.entity.enums.ProjectStatus;
 
-import java.util.List;
 import java.util.Set;
 
 public interface ProjectService {
@@ -17,10 +17,6 @@ public interface ProjectService {
 
     Set<ProjectDto> getAllProjectsOrderingByPriority();
 
-    Set<ProjectDto> getAllProjectsByStatus(String status);
-
-
-
-
+    Set<ProjectDto> getAllProjectsByStatus(ProjectStatus status);
 
 }

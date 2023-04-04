@@ -8,6 +8,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -20,9 +23,10 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "projects", uniqueConstraints = {
-        @UniqueConstraint(name = "ui_project_name", columnNames = "projectName")
-})
+@Table(name = "projects", indexes =
+@Index(name = "stat_index", columnList = "projectStatus"),
+        uniqueConstraints = {
+                @UniqueConstraint(name = "ui_project_name", columnNames = "projectName")})
 public class Project {
 
     @Id
@@ -31,14 +35,15 @@ public class Project {
 
     private String projectName;
 
-
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private ProjectPriority projectPriority;
 
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus;
 
-    @ManyToMany(mappedBy = "projects")
+    @ManyToMany
+    @JoinTable(name = "employees_projects", joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private Set<Employee> employees = new HashSet<>();
 
 }

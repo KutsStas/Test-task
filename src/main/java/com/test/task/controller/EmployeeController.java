@@ -1,6 +1,7 @@
 package com.test.task.controller;
 
 import com.test.task.dto.EmployeeDto;
+import com.test.task.entity.enums.Department;
 import com.test.task.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +77,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/department")
-    public ResponseEntity<Set<EmployeeDto>> getAllEmployeesByDepartment(@RequestParam String department) {
+    public ResponseEntity<Set<EmployeeDto>> getAllEmployeesByDepartment(@RequestParam Department department) {
 
         log.info("Get all employees by department request");
         Set<EmployeeDto> userDtoList = service.getAllEmployeesByDepartment(department);
@@ -107,11 +108,11 @@ public class EmployeeController {
     }
 
     @PutMapping("/remove")
-    public ResponseEntity<Boolean> removeEmployeeToTheProject(@RequestParam Integer id, Integer projectId) {
+    public ResponseEntity<Boolean> removeEmployeeFromTheProject(@RequestParam Integer employeeId, Integer projectId) {
 
-        log.info("Remove employee to project with Id:{}  request ", projectId);
-        service.removeEmployeeToTheProjectById(id, projectId);
-        log.info("Employee with id:{} removed successfully", id);
+        log.info("Remove employee from project with Id:{}  request ", projectId);
+        service.removeEmployeeFromTheProjectById(employeeId, projectId);
+        log.info("Employee with employeeId:{} removed successfully", employeeId);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }

@@ -17,11 +17,11 @@ public class ProjectDto {
     @Id
     private Integer id;
 
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "Project name is mandatory")
     private String projectName;
-
+    @NotBlank(message = "Project priority is mandatory")
     private ProjectPriority projectPriority;
-
+    @NotBlank(message = "Project status is mandatory")
     private ProjectStatus projectStatus;
 
 
