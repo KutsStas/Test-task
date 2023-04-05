@@ -32,6 +32,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(MockitoExtension.class)
 class EmployeeControllerTest {
 
+    private static final String EMPLOYEES_URL = "/employees";
+
     private MockMvc mvc;
 
     private EmployeeDto dto;
@@ -44,7 +46,6 @@ class EmployeeControllerTest {
     @Mock
     EmployeeService service;
 
-
     @BeforeEach
     public void setup() {
 
@@ -55,12 +56,11 @@ class EmployeeControllerTest {
                 .setControllerAdvice(new GlobalControllerAdvice()).build();
     }
 
-
     @Test
     void addEmployee() throws Exception {
 
         when(service.addEmployee(dto)).thenReturn(dto.getId());
-        mvc.perform(post("/employees")
+        mvc.perform(post(EMPLOYEES_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -71,7 +71,7 @@ class EmployeeControllerTest {
     void getEmployee() throws Exception {
 
         when(service.getEmployeeById(dto.getId())).thenReturn(dto);
-        mvc.perform(get("/employees?id=" + dto.getId())
+        mvc.perform(get(EMPLOYEES_URL + "?id=" + dto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -87,7 +87,7 @@ class EmployeeControllerTest {
     void updateEmployee() throws Exception {
 
         when(service.updateEmployeeInfo(dto)).thenReturn(dto);
-        mvc.perform(put("/employees?id=")
+        mvc.perform(put(EMPLOYEES_URL + "?id=")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -96,14 +96,12 @@ class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(dto.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber").value(dto.getPhoneNumber()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(dto.getEmail()));
-
-
     }
 
     @Test
     void deleteEmployee() throws Exception {
 
-        mvc.perform(delete("/employees?id=2")
+        mvc.perform(delete(EMPLOYEES_URL + "?id=2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto))).
                 andExpect(MockMvcResultMatchers.status().isOk())
@@ -115,7 +113,7 @@ class EmployeeControllerTest {
     void getAllEmployees() throws Exception {
 
         when(service.getAllEmployees()).thenReturn(dtoSet);
-        mvc.perform(get("/employees/all")
+        mvc.perform(get(EMPLOYEES_URL + "/all")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dtoSet)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -126,7 +124,7 @@ class EmployeeControllerTest {
 
         dto.setDepartment(Department.QA);
         when(service.getAllEmployeesByDepartment(dto.getDepartment())).thenReturn(dtoSet);
-        mvc.perform(get("/employees/department?department=" + dto.getDepartment())
+        mvc.perform(get(EMPLOYEES_URL + "/department?department=" + dto.getDepartment())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dtoSet)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -140,7 +138,7 @@ class EmployeeControllerTest {
         dto.getProjects().add(project);
         dtoSet.add(dto);
         when(service.getAllEmployeesByProjectName(project.getProjectName())).thenReturn(dtoSet);
-        mvc.perform(get("/employees/project?projectName=" + project.getProjectName())
+        mvc.perform(get(EMPLOYEES_URL + "/project?projectName=" + project.getProjectName())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dtoSet)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -149,7 +147,7 @@ class EmployeeControllerTest {
     @Test
     void addEmployeeToTheProject() throws Exception {
 
-        mvc.perform(put("/employees/hire?employeeId=" + dto.getId() + "&projectName=name")
+        mvc.perform(put(EMPLOYEES_URL + "/hire?employeeId=" + dto.getId() + "&projectName=name")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -158,8 +156,9 @@ class EmployeeControllerTest {
 
     @Test
     void removeEmployeeFromTheProject() throws Exception {
+
         int id = 42;
-        mvc.perform(put("/employees/remove?id="+dto.getId()+"&projectId="+id)
+        mvc.perform(put(EMPLOYEES_URL + "/remove?employeeId=" + dto.getId() + "&projectId=" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())

@@ -5,6 +5,7 @@ import com.test.task.entity.Employee;
 import com.test.task.entity.enums.ProjectPriority;
 import com.test.task.entity.enums.ProjectStatus;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
@@ -19,9 +20,11 @@ public class ProjectDto {
 
     @NotBlank(message = "Project name is mandatory")
     private String projectName;
-    @NotBlank(message = "Project priority is mandatory")
+
+    @NotNull(message = "Project priority is mandatory")
     private ProjectPriority projectPriority;
-    @NotBlank(message = "Project status is mandatory")
+
+    @NotNull(message = "Project status is mandatory")
     private ProjectStatus projectStatus;
 
 

@@ -3,6 +3,7 @@ package com.test.task.controller;
 import com.test.task.dto.EmployeeDto;
 import com.test.task.entity.enums.Department;
 import com.test.task.service.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class EmployeeController {
 
 
     @PostMapping
-    public ResponseEntity<Integer> addEmployee(@RequestBody EmployeeDto dto) {
+    public ResponseEntity<Integer> addEmployee(@Valid @RequestBody EmployeeDto dto)  {
 
         log.info("Add employee request.Dto:{} ", dto);
         Integer newUser = service.addEmployee(dto);
@@ -47,7 +48,7 @@ public class EmployeeController {
     }
 
     @PutMapping
-    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeDto dto) {
+    public ResponseEntity<EmployeeDto> updateEmployee(@Valid @RequestBody EmployeeDto dto) {
 
         log.info("Update employee with id:{}  request ", dto.getId());
         EmployeeDto newDto = service.updateEmployeeInfo(dto);

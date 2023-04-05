@@ -6,7 +6,6 @@ import com.test.task.entity.enums.ProjectStatus;
 import com.test.task.exeption.IncorrectInputException;
 import com.test.task.exeption.ValidationException;
 import com.test.task.mapper.ProjectMapper;
-import com.test.task.repository.EmployeeRepository;
 import com.test.task.repository.ProjectRepository;
 import com.test.task.service.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -23,16 +22,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository repository;
 
-    private final EmployeeRepository employeeRepository;
-
     private final ProjectMapper mapper;
 
     @Override
     public Integer addProject(ProjectDto dto) {
 
         dto.setId(null);
-        if (repository.existsByProjectName(dto.getProjectName()))
+        if (repository.existsByProjectName(dto.getProjectName())) {
             throw new IncorrectInputException("Project name must be unique");
+        }
         Project project = mapper.toProject(dto);
         repository.save(project);
 
@@ -54,10 +52,14 @@ public class ProjectServiceImpl implements ProjectService {
         if (isNull(dto.getId())) {
             throw new ValidationException("Project id can't be null");
         }
-        if (!repository.existsById(dto.getId()))
-            throw new NoSuchElementException("Project with id:" + dto.getId() + " not found");
-        Project projectUPD = mapper.toProject(dto);
-        repository.save(projectUPD);
+        Project project = repository.findById(dto.getId()).orElseThrow(() ->
+                new NoSuchElementException("Project with id:" + dto.getId() + " not found"));
+        if (!project.getProjectName().equals(dto.getProjectName())) {
+            if (repository.existsByProjectName(dto.getProjectName()))
+                throw new IncorrectInputException("Project name must be unique");
+        }
+        Project projectUpdate = mapper.toProject(dto);
+        repository.save(projectUpdate);
         return dto;
     }
 
@@ -70,15 +72,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Set<ProjectDto> getAllProjectsOrderingByPriority() {
+
         Set<Project> projects = repository.findAllProjectsOrderingByPriority();
         return mapper.toDtoCollect(projects);
     }
 
     @Override
     public Set<ProjectDto> getAllProjectsByStatus(ProjectStatus status) {
+
         Set<Project> projects = repository.findByProjectStatus(status);
         return mapper.toDtoCollect(projects);
     }
-
 
 }

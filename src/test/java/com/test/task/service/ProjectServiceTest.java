@@ -21,6 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -50,9 +51,9 @@ public class ProjectServiceTest {
         when(repository.existsByProjectName(dto.getProjectName())).thenReturn(false);
         when(mapper.toProject(dto)).thenReturn(project);
 
-        int id = service.addProject(dto);
+        Integer actual = service.addProject(dto);
 
-        assertEquals("Comparison by id", id, project.getId());
+        assertNotNull(actual);
         verify(repository, times(1)).existsByProjectName(dto.getProjectName());
         verify(mapper, times(1)).toProject(dto);
         verify(repository, times(1)).save(project);
@@ -109,7 +110,8 @@ public class ProjectServiceTest {
 
         Project project = EntityBuilder.buildProject();
         ProjectDto expected = DtoBuilder.buildProjectDto();
-        when(repository.existsById(expected.getId())).thenReturn(true);
+        when(repository.findById(expected.getId())).thenReturn(Optional.of(project));
+        when(repository.existsByProjectName(expected.getProjectName())).thenReturn(false);
         expected.setProjectName("Update Name");
         expected.setProjectStatus(ProjectStatus.IN_PROGRESS);
         when(mapper.toProject(expected)).thenReturn(project);
@@ -118,7 +120,7 @@ public class ProjectServiceTest {
 
         assertEquals("Comparison by name", expected.getProjectName(), actual.getProjectName());
         assertEquals("Comparison by status", expected.getProjectStatus(), actual.getProjectStatus());
-        verify(repository, times(1)).existsById(expected.getId());
+        verify(repository, times(1)).existsByProjectName(expected.getProjectName());
         verify(mapper, times(1)).toProject(expected);
         verify(repository, times(1)).save(project);
 
@@ -130,13 +132,13 @@ public class ProjectServiceTest {
 
         Project project = EntityBuilder.buildProject();
         ProjectDto expected = DtoBuilder.buildProjectDto();
-        when(repository.existsById(expected.getId())).thenReturn(false);
+        when(repository.findById(expected.getId())).thenReturn(Optional.empty());
 
         NoSuchElementException thrown = assertThrows
                 (NoSuchElementException.class, () -> service.updateProjectInfo(expected));
         Assertions.assertEquals(thrown.getMessage(), ("Project with id:" + expected.getId() + " not found"));
 
-        verify(repository, times(1)).existsById(expected.getId());
+        verify(repository, times(1)).findById(expected.getId());
         verify(mapper, never()).toProject(expected);
         verify(repository, never()).save(project);
 

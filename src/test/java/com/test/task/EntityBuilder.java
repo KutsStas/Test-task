@@ -2,6 +2,8 @@ package com.test.task;
 
 import com.test.task.entity.Employee;
 import com.test.task.entity.Project;
+import com.test.task.entity.enums.ProjectPriority;
+import com.test.task.entity.enums.ProjectStatus;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.util.HashSet;
@@ -36,6 +38,8 @@ public class EntityBuilder {
         Project project = new Project();
         project.setId(RandomUtils.nextInt(1, 999));
         project.setProjectName("Project name" + project.getId());
+        project.setProjectStatus(ProjectStatus.IN_PROGRESS);
+        project.setProjectPriority(ProjectPriority.MEDIUM);
 
         return project;
     }

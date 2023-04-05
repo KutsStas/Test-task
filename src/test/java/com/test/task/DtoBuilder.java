@@ -2,6 +2,8 @@ package com.test.task;
 
 import com.test.task.dto.EmployeeDto;
 import com.test.task.dto.ProjectDto;
+import com.test.task.entity.enums.ProjectPriority;
+import com.test.task.entity.enums.ProjectStatus;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.util.HashSet;
@@ -36,6 +38,8 @@ public class DtoBuilder {
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(RandomUtils.nextInt(1, 999));
         projectDto.setProjectName("Project name" + projectDto.getId());
+        projectDto.setProjectStatus(ProjectStatus.IN_PROGRESS);
+        projectDto.setProjectPriority(ProjectPriority.MEDIUM);
 
         return projectDto;
     }

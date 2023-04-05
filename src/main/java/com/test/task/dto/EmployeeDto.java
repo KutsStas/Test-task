@@ -17,7 +17,7 @@ public class EmployeeDto {
     @Id
     private Integer id;
 
-    @NotBlank(message = "Name is mandatory")// todo don't work in put method
+    @NotBlank(message = "Name is mandatory")
     private String firstName;
     @NotBlank(message = "Last name is mandatory")
     private String lastName;
@@ -26,7 +26,7 @@ public class EmployeeDto {
 
     private String email;
 
-    @NotBlank(message = "Department name is mandatory")
+
     private Department department;
 
 

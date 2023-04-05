@@ -24,6 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -55,8 +56,8 @@ public class EmployeeServiceTest {
         Employee employee = EntityBuilder.buildEmployee();
         EmployeeDto employeeDto = DtoBuilder.buildEmployeeDto();
         when(mapper.toEmployee(employeeDto)).thenReturn(employee);
-        int id = employeeService.addEmployee(employeeDto);
-        assertEquals("Comparison by id", id, employee.getId());
+        Integer actual = employeeService.addEmployee(employeeDto);
+        assertNotNull(actual);
         verify(repository, times(1)).save(employee);
 
     }

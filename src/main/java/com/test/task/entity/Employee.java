@@ -23,7 +23,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "employees", indexes =
-@Index(name = "dep_index", columnList = "department"))
+@Index(name = "in_employees_department", columnList = "department"))
 public class Employee {
 
     @Id

@@ -30,6 +30,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(MockitoExtension.class)
 class ProjectControllerTest {
 
+    private static final String PROJECTS_URL = "/projects";
+
     private MockMvc mvc;
 
     private ProjectDto dto;
@@ -58,7 +60,7 @@ class ProjectControllerTest {
     void addProject() throws Exception {
 
         when(service.addProject(dto)).thenReturn(dto.getId());
-        mvc.perform(post("/projects")
+        mvc.perform(post(PROJECTS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -70,7 +72,7 @@ class ProjectControllerTest {
     void getProject() throws Exception {
 
         when(service.getProjectById(dto.getId())).thenReturn(dto);
-        mvc.perform(get("/projects?id=" + dto.getId())
+        mvc.perform(get(PROJECTS_URL + "?id=" + dto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -81,9 +83,8 @@ class ProjectControllerTest {
 
     @Test
     void updateProject() throws Exception {
-
         when(service.updateProjectInfo(dto)).thenReturn(dto);
-        mvc.perform(put("/projects?id=")
+        mvc.perform(put(PROJECTS_URL + "?id=")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -94,7 +95,7 @@ class ProjectControllerTest {
     @Test
     void deleteProject() throws Exception {
 
-        mvc.perform(delete("/projects?id=2")
+        mvc.perform(delete(PROJECTS_URL + "?id=2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dto))).
                 andExpect(MockMvcResultMatchers.status().isOk())
@@ -102,12 +103,11 @@ class ProjectControllerTest {
 
     }
 
-
     @Test
     void getAllProjects() throws Exception {
 
         when(service.getAllProjectsOrderingByPriority()).thenReturn(dtoSet);
-        mvc.perform(get("/projects/all")
+        mvc.perform(get(PROJECTS_URL + "/all")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dtoSet)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -118,11 +118,10 @@ class ProjectControllerTest {
     void getAllProjectsByStatus() throws Exception {
 
         when(service.getAllProjectsByStatus(ProjectStatus.IN_PROGRESS)).thenReturn(dtoSet);
-        mvc.perform(get("/projects/status?status=" + ProjectStatus.IN_PROGRESS)
+        mvc.perform(get(PROJECTS_URL + "/status?status=" + ProjectStatus.IN_PROGRESS)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dtoSet)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
 
     }
 

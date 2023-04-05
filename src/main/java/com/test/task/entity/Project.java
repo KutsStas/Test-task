@@ -24,7 +24,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "projects", indexes =
-@Index(name = "stat_index", columnList = "projectStatus"),
+@Index(name = "in_projects_status", columnList = "projectStatus"),
         uniqueConstraints = {
                 @UniqueConstraint(name = "ui_project_name", columnNames = "projectName")})
 public class Project {

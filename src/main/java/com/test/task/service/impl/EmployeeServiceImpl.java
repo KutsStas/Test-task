@@ -64,8 +64,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!repository.existsById(dto.getId())) {
             throw new NoSuchElementException("Employee with id: " + dto.getId() + " not found");
         }
-        Employee employeeUPD = mapper.toEmployee(dto);
-        repository.save(employeeUPD);
+        Employee employee = mapper.toEmployee(dto);
+        repository.save(employee);
 
         return dto;
     }

@@ -3,6 +3,7 @@ package com.test.task.controller;
 import com.test.task.dto.ProjectDto;
 import com.test.task.entity.enums.ProjectStatus;
 import com.test.task.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class ProjectController {
 
 
     @PostMapping
-    public ResponseEntity<Integer> addProject(@RequestBody ProjectDto dto) {
+    public ResponseEntity<Integer> addProject(@Valid @RequestBody ProjectDto dto) {
 
         log.info("Add project request.Dto:{} ", dto);
         Integer newUser = service.addProject(dto);
@@ -47,7 +48,7 @@ public class ProjectController {
     }
 
     @PutMapping
-    public ResponseEntity<ProjectDto> updateProject(@RequestBody ProjectDto dto) {
+    public ResponseEntity<ProjectDto> updateProject(@Valid @RequestBody ProjectDto dto) {
 
         log.info("Update project with id:{}  request ", dto.getId());
         ProjectDto newDto = service.updateProjectInfo(dto);
@@ -63,7 +64,7 @@ public class ProjectController {
         service.deleteProjectById(id);
         log.info("Delete project by id:{} successfully", id);
 
-        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK); // todo always return true
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK); 
     }
 
     @GetMapping("/all")
